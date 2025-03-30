@@ -1,0 +1,55 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Basic dXNlcjpwYXNzd29yZA==
+      connection:
+      - keep-alive
+      host:
+      - api.brewfather.app
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://api.brewfather.app/v2/inventory/fermentables/default-0aa30343c0c
+  response:
+    body:
+      string: '{"usedIn":"","_timestamp_ms":1742576518155,"color":3.6,"inventory":1.02,"type":"Grain","maxInBatch":100,"potentialPercentage":80.13,"_rev":"mvNyk7rdJz8iu9jWpJi3hoWMAiREuJ","coarseFineDiff":1,"bestBeforeDate":null,"notFermentable":false,"name":"Swaen
+        Ale","moisture":4.5,"notes":"Swaen Ale is used to correct over-pale malts,
+        to produce \"golden\" beer and to improve palate fullness.","fan":null,"potential":1.037,"protein":11.5,"origin":"Netherlands","diastaticPower":76,"friability":80,"substitutes":"","costPerAmount":null,"hidden":false,"_timestamp":{"_seconds":1742576518,"_nanoseconds":155000000},"_version":"2.11.6","userNotes":"","fgdb":81,"grainCategory":"Base","cgdb":null,"manufacturingDate":null,"_created":{"_seconds":1696159317,"_nanoseconds":352000000},"acid":null,"_id":"default-0aa30343c0c","supplier":"The
+        Swaen"}'
+    headers:
+      Accept-Ranges:
+      - bytes
+      Cache-Control:
+      - private
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '831'
+      Content-Type:
+      - application/json; charset=utf-8
+      Function-Execution-Id:
+      - xwl1g6jxuakp
+      Server:
+      - Google Frontend
+      Strict-Transport-Security:
+      - max-age=31556926
+      Vary:
+      - Origin,cookie,need-authorization, x-fh-requested-host, accept-encoding
+      X-Cache:
+      - MISS
+      X-Cache-Hits:
+      - '0'
+      X-Powered-By:
+      - Express
+      alt-svc:
+      - h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+    status:
+      code: 200
+      message: OK
+version: 1

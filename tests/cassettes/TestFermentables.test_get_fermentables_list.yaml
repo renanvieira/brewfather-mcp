@@ -1,0 +1,62 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Basic dXNlcjpwYXNzd29yZA==
+      connection:
+      - keep-alive
+      host:
+      - api.brewfather.app
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://api.brewfather.app/v2/inventory/fermentables
+  response:
+    body:
+      string: '[{"_id":"default-03044fe","attenuation":0,"inventory":0.7,"name":"Rice
+        Hulls","supplier":"Briess","type":"Adjunct"},{"_id":"default-08f456e","attenuation":null,"inventory":0,"name":"Oats,
+        Flaked","supplier":"","type":"Grain"},{"_id":"default-0aa30343c0c","inventory":1.02,"name":"Swaen
+        Ale","supplier":"The Swaen","type":"Grain"},{"_id":"default-0f322ac","attenuation":0.16,"inventory":0.7,"name":"Chocolate
+        Wheat","supplier":"Weyermann","type":"Grain"},{"_id":"default-1c58599","inventory":0.15,"name":"Crystal
+        Malt 60L","supplier":"Thomas Fawcett","type":"Grain"},{"_id":"default-2f3e835","attenuation":null,"inventory":0.12,"name":"Chateau
+        Munich","supplier":"Castle Malting","type":"Grain"},{"_id":"default-33db684","attenuation":0.81,"inventory":0.456,"name":"Pale
+        Malt, Maris Otter","supplier":"Thomas Fawcett","type":"Grain"},{"_id":"default-387ce3a","attenuation":0.16,"inventory":0.541,"name":"Chocolate
+        Rye","supplier":"Weyermann","type":"Grain"},{"_id":"default-4d8b7c4","attenuation":0.79,"inventory":0,"name":"Vienna
+        Malt","supplier":"Weyermann","type":"Grain"},{"_id":"default-60a8af8","inventory":0.46,"name":"Munich
+        I","supplier":"Weyermann","type":"Grain"}]'
+    headers:
+      Accept-Ranges:
+      - bytes
+      Cache-Control:
+      - private
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1174'
+      Content-Type:
+      - application/json; charset=utf-8
+      Function-Execution-Id:
+      - oi8jscramznl
+      Server:
+      - Google Frontend
+      Strict-Transport-Security:
+      - max-age=31556926
+      Vary:
+      - Origin,cookie,need-authorization, x-fh-requested-host, accept-encoding
+      X-Cache:
+      - MISS
+      X-Cache-Hits:
+      - '0'
+      X-Powered-By:
+      - Express
+      alt-svc:
+      - h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+    status:
+      code: 200
+      message: OK
+version: 1

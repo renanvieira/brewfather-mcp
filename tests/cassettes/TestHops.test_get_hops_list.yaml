@@ -1,0 +1,55 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Basic dXNlcjpwYXNzd29yZA==
+      connection:
+      - keep-alive
+      host:
+      - api.brewfather.app
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://api.brewfather.app/v2/inventory/hops
+  response:
+    body:
+      string: '[{"_id":"default-07c53ef9","alpha":7.1,"inventory":0,"name":"Motueka","type":"Pellet","use":"Boil"},{"_id":"default-42755ae8","alpha":9.4,"inventory":0,"name":"Hallertau
+        Blanc","type":"Pellet","use":"Boil"},{"_id":"default-5b932476","alpha":16.27,"inventory":100,"name":"Hallertau
+        Magnum","type":"Pellet","use":"Boil"},{"_id":"default-620d1be4","alpha":8.8,"inventory":3,"name":"Amarillo","type":"Pellet","use":"Boil"},{"_id":"default-7f820fa1","alpha":5,"inventory":17,"name":"East
+        Kent Goldings (EKG)","type":"Pellet","use":"Boil"},{"_id":"default-8e9450d5","alpha":12,"inventory":70,"name":"Citra","type":"Pellet","use":"Boil"},{"_id":"default-bc4774ae","alpha":9.9,"inventory":30,"name":"Centennial","type":"Pellet","use":"Boil"},{"_id":"default-c6a29dee","alpha":8.2,"inventory":3,"name":"Perle","type":"Pellet","use":"Boil"},{"_id":"default-c92b62c5","alpha":2.7,"inventory":0,"name":"Tettnang","type":"Pellet","use":"Boil"},{"_id":"default-ea130494","alpha":12.6,"inventory":47,"name":"Chinook","type":"Pellet","use":"Boil"}]'
+    headers:
+      Accept-Ranges:
+      - bytes
+      Cache-Control:
+      - private
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1032'
+      Content-Type:
+      - application/json; charset=utf-8
+      Function-Execution-Id:
+      - xwl17c42bkkz
+      Server:
+      - Google Frontend
+      Strict-Transport-Security:
+      - max-age=31556926
+      Vary:
+      - Origin,cookie,need-authorization, x-fh-requested-host, accept-encoding
+      X-Cache:
+      - MISS
+      X-Cache-Hits:
+      - '0'
+      X-Powered-By:
+      - Express
+      alt-svc:
+      - h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+    status:
+      code: 200
+      message: OK
+version: 1

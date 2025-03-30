@@ -1,7 +1,11 @@
 from enum import auto
+import urllib.parse
 from enum import StrEnum
-from pydantic import BaseModel, Field, RootModel
+from pydantic import BaseModel, Field, RootModel, field_validator
 from datetime import datetime
+
+from pydantic.config import ConfigDict
+import brewfather_mcp.utils as utils
 
 
 class InventoryCategory(StrEnum):
@@ -25,18 +29,6 @@ class Fermentable(BaseModel):
 
     model_config = {
         "populate_by_name": True,
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "_id": "default-03044fe",
-                    "attenuation": 0,
-                    "inventory": 0.7,
-                    "name": "Rice Hulls",
-                    "supplier": "Briess",
-                    "type": "Adjunct",
-                }
-            ]
-        },
     }
 
 
@@ -77,7 +69,7 @@ class FermentableDetail(Fermentable):
     cgdb: float | None = None
     best_before_date: str | None = Field(alias="bestBeforeDate", default=None)
     hidden: bool = False
-    amount: float
+    amount: float | None = False
     origin: str | None = None
     cost_per_amount: float | None = Field(alias="costPerAmount", default=None)
     manufacturing_date: str | None = Field(alias="manufacturingDate", default=None)
@@ -98,6 +90,11 @@ class FermentableDetail(Fermentable):
     model_config = {
         "populate_by_name": True,
     }
+
+    @field_validator("manufacturing_date", "best_before_date", mode="before")
+    @classmethod
+    def convert_timestamp_to_isodate(cls, value):
+        return utils.convert_timestamp_to_iso8601(value)
 
 
 class Hop(BaseModel):
@@ -145,7 +142,7 @@ class HopDetail(Hop):
     amount: float | None = None
     temp: float | None = None
     substitutes: str = ""
-    best_before_date: int | None = Field(
+    best_before_date: str | None = Field(
         alias="bestBeforeDate", default=None
     )  # Unix timestamp in milliseconds
     used_in: str = Field(alias="usedIn", default="")
@@ -154,7 +151,7 @@ class HopDetail(Hop):
     cohumulone: float | None = None
     humulene: float | None = None
     created: Timestamp = Field(alias="_created")
-    manufacturing_date: int | None = Field(
+    manufacturing_date: str | None = Field(
         alias="manufacturingDate", default=None
     )  # Unix timestamp in milliseconds
     time: int | None = None
@@ -165,6 +162,11 @@ class HopDetail(Hop):
     model_config = {
         "populate_by_name": True,
     }
+
+    @field_validator("manufacturing_date", "best_before_date", mode="before")
+    @classmethod
+    def convert_timestamp_to_isodate(cls, value):
+        return utils.convert_timestamp_to_iso8601(value)
 
 
 class Yeast(BaseModel):
@@ -218,15 +220,62 @@ class YeastDetail(Yeast):
     best_before_date: int | None = Field(alias="bestBeforeDate", default=None)
     amount: float | None = None
     ferments_all: bool = Field(alias="fermentsAll", default=False)
-    manufacturing_date: int | None = Field(alias="manufacturingDate", default=None)
+    manufacturing_date: str | None = Field(alias="manufacturingDate", default=None)
     timestamp: Timestamp = Field(alias="_timestamp")
     timestamp_ms: int = Field(alias="_timestamp_ms")
     user_notes: str = Field(alias="userNotes", default="")
     rev: str = Field(alias="_rev")
     created: Timestamp = Field(alias="_created")
-    ersion: str = Field(alias="_version")
+    version: str = Field(alias="_version")
+
+    @field_validator("manufacturing_date", "best_before_date", mode="before")
+    @classmethod
+    def convert_timestamp_to_isodate(cls, value):
+        return utils.convert_timestamp_to_iso8601(value)
 
     model_config = {
         "populate_by_name": True,
     }
 
+
+class OrderByDirection(StrEnum):
+    ASCENDING = "asc"
+    DESCENDING = "desc"
+
+
+class ListQueryParams:
+    inventory_negative: bool | None = None
+    complete: bool | None = None
+    inventory_exists: bool | None = None
+    limit: int | None = None
+    start_after: str | None = None
+    order_by: str | None = None
+    order_by_direction: OrderByDirection | None = None
+
+    def as_query_param_str(self) -> str | None:
+        qs = ""
+
+        if self.inventory_negative:
+            qs += f"inventory_negative={self.inventory_negative}"
+
+        if self.complete:
+            qs += f"complete={self.complete}"
+        if self.inventory_exists:
+            qs += f"inventory_exists={self.inventory_exists}"
+
+        if self.limit:
+            qs += f"limit={self.limit}"
+
+        if self.start_after:
+            qs += f"start_after={urllib.parse.quote_plus(self.start_after)}"
+
+        if self.order_by:
+            qs += f"order_by={urllib.parse.quote_plus(self.order_by)}"
+
+        if self.order_by_direction:
+           qs += f"order_by_direction={self.order_by_direction}"
+
+        if qs:
+            return qs
+        else:
+            None

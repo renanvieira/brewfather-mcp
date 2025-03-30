@@ -1,0 +1,61 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      authorization:
+      - Basic dXNlcjpwYXNzd29yZA==
+      connection:
+      - keep-alive
+      host:
+      - api.brewfather.app
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: https://api.brewfather.app/v2/inventory/yeasts
+  response:
+    body:
+      string: '[{"_id":"default-016efc","attenuation":81,"inventory":0,"name":"Safale
+        American","type":"Ale"},{"_id":"default-1db884","attenuation":77,"inventory":0,"name":"Bohemian
+        Lager","type":"Lager"},{"_id":"default-73f938","attenuation":77,"inventory":0,"name":"Weihenstephan
+        Weizen","type":"Wheat"},{"_id":"default-930665","attenuation":84,"inventory":4,"name":"SafLager
+        German Lager","type":"Lager"},{"_id":"default-c054a0","attenuation":76,"inventory":0,"name":"American
+        Ale II","type":"Ale"},{"_id":"default-c4977c","attenuation":75,"inventory":0,"name":"Irish
+        Ale","type":"Ale"},{"_id":"default-duOYyoZ2UAfdqzfKFMJnWgQ76uDvhT","attenuation":82,"inventory":1,"name":"Lutra
+        Kveik","type":"Ale"},{"_id":"default-ecabcd","attenuation":82,"inventory":4,"name":"SafLager
+        West European Lager","type":"Lager"},{"_id":"default-lallemand-voss","attenuation":80,"inventory":1,"name":"Voss
+        Kveik","type":"Ale"}]'
+    headers:
+      Accept-Ranges:
+      - bytes
+      Cache-Control:
+      - private
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '895'
+      Content-Type:
+      - application/json; charset=utf-8
+      Function-Execution-Id:
+      - u3061mdtaijl
+      Server:
+      - Google Frontend
+      Strict-Transport-Security:
+      - max-age=31556926
+      Vary:
+      - Origin,cookie,need-authorization, x-fh-requested-host, accept-encoding
+      X-Cache:
+      - MISS
+      X-Cache-Hits:
+      - '0'
+      X-Powered-By:
+      - Express
+      alt-svc:
+      - h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+    status:
+      code: 200
+      message: OK
+version: 1
