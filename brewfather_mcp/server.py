@@ -192,7 +192,7 @@ async def read_yeasts_detail(identifier: str) -> str:
     logger.info("received request")
 
     try:
-        item = brewfather_client.get_yeasts_detail(identifier)
+        item = brewfather_client.get_yeast_detail(identifier)
 
         formatted = f"""
         Name: {item.name}

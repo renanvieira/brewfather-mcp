@@ -1,7 +1,10 @@
 from enum import auto
+import urllib.parse
 from enum import StrEnum
 from pydantic import BaseModel, Field, RootModel, field_validator
 from datetime import datetime
+
+from pydantic.config import ConfigDict
 import brewfather_mcp.utils as utils
 
 
@@ -26,18 +29,6 @@ class Fermentable(BaseModel):
 
     model_config = {
         "populate_by_name": True,
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "_id": "default-03044fe",
-                    "attenuation": 0,
-                    "inventory": 0.7,
-                    "name": "Rice Hulls",
-                    "supplier": "Briess",
-                    "type": "Adjunct",
-                }
-            ]
-        },
     }
 
 
@@ -78,7 +69,7 @@ class FermentableDetail(Fermentable):
     cgdb: float | None = None
     best_before_date: str | None = Field(alias="bestBeforeDate", default=None)
     hidden: bool = False
-    amount: float
+    amount: float | None = False
     origin: str | None = None
     cost_per_amount: float | None = Field(alias="costPerAmount", default=None)
     manufacturing_date: str | None = Field(alias="manufacturingDate", default=None)
@@ -245,3 +236,46 @@ class YeastDetail(Yeast):
     model_config = {
         "populate_by_name": True,
     }
+
+
+class OrderByDirection(StrEnum):
+    ASCENDING = "asc"
+    DESCENDING = "desc"
+
+
+class ListQueryParams:
+    inventory_negative: bool | None = None
+    complete: bool | None = None
+    inventory_exists: bool | None = None
+    limit: int | None = None
+    start_after: str | None = None
+    order_by: str | None = None
+    order_by_direction: OrderByDirection | None = None
+
+    def as_query_param_str(self) -> str | None:
+        qs = ""
+
+        if self.inventory_negative:
+            qs += f"inventory_negative={self.inventory_negative}"
+
+        if self.complete:
+            qs += f"complete={self.complete}"
+        if self.inventory_exists:
+            qs += f"inventory_exists={self.inventory_exists}"
+
+        if self.limit:
+            qs += f"limit={self.limit}"
+
+        if self.start_after:
+            qs += f"start_after={urllib.parse.quote_plus(self.start_after)}"
+
+        if self.order_by:
+            qs += f"order_by={urllib.parse.quote_plus(self.order_by)}"
+
+        if self.order_by_direction:
+           qs += f"order_by_direction={self.order_by_direction}"
+
+        if qs:
+            return qs
+        else:
+            None

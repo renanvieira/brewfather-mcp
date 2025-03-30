@@ -1,19 +1,10 @@
+import typing
 from dotenv import load_dotenv
 import pytest
 import httpx
 from pathlib import Path
 
 _ = load_dotenv()
-
-# Create directories for test fixtures
-TESTS_DIR = Path("tests")
-FIXTURES_DIR = TESTS_DIR / "fixtures"
-
-for directory in [TESTS_DIR, FIXTURES_DIR, FIXTURES_DIR / "vcr_cassettes"]:
-    directory.mkdir(exist_ok=True)
-
-# Add pytest-asyncio configuration
-pytest_plugins = ["pytest_asyncio"]
 
 
 @pytest.fixture
@@ -74,8 +65,27 @@ def httpx_mock():
     return MockClient()
 
 
+def remove_response_headers(response: dict[str, typing.Any]):
+    """Removes specific headers from response to avoid leaking developers information"""
+    if "headers" in response:
+        headers_to_remove = [
+            "X-Served-By",
+            "X-Cloud-Trace-Context",
+            "Etag",
+            "Date",
+            "X-Country-Code",
+            "X-Served-By",
+            "X-Timer",
+        ]  # Specify headers to remove
+        for header in headers_to_remove:
+            response["headers"].pop(header, None)
+
+    return response
+
+
 @pytest.fixture(scope="module")
 def vcr_config():
     return {
-        "filter_headers": [("authorization", "<auth>")],
+        "filter_headers": [("authorization", "Basic dXNlcjpwYXNzd29yZA==")],
+        "before_record_response": remove_response_headers,
     }

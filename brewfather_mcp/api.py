@@ -9,6 +9,7 @@ from brewfather_mcp.types import (
     HopDetail,
     HopList,
     InventoryCategory,
+    ListQueryParams,
     YeastDetail,
     YeastList,
 )
@@ -40,10 +41,16 @@ class BrewfatherInventoryClient:
             response = await client.get(url)
             return response.text
 
-    async def get_fermentables_list(self) -> FermentableList:
+    async def get_fermentables_list(
+        self, query_params: ListQueryParams | None = None
+    ) -> FermentableList:
         url = self.__inventory_summary_url.format(
             category=InventoryCategory.FERMENTABLES
         )
+
+        if query_params:
+            url += f"?{query_params.as_query_param_str()}"
+
         json_response = await self._make_request(url)
         return FermentableList.model_validate_json(json_response)
 
@@ -54,8 +61,14 @@ class BrewfatherInventoryClient:
         json_response = await self._make_request(url)
         return FermentableDetail.model_validate_json(json_response)
 
-    async def get_hops_list(self) -> HopList:
+    async def get_hops_list(
+        self, query_params: ListQueryParams | None = None
+    ) -> HopList:
         url = self.__inventory_summary_url.format(category=InventoryCategory.HOPS)
+
+        if query_params:
+            url += f"?{query_params.as_query_param_str()}"
+
         json_response = await self._make_request(url)
         return HopList.model_validate_json(json_response)
 
@@ -64,12 +77,18 @@ class BrewfatherInventoryClient:
         json_response = await self._make_request(url)
         return HopDetail.model_validate_json(json_response)
 
-    async def get_yeasts_list(self) -> YeastList:
+    async def get_yeasts_list(
+        self, query_params: ListQueryParams | None = None
+    ) -> YeastList:
         url = self.__inventory_summary_url.format(category=InventoryCategory.YEASTS)
+
+        if query_params:
+            url += f"?{query_params.as_query_param_str()}"
+
         json_response = await self._make_request(url)
         return YeastList.model_validate_json(json_response)
 
-    async def get_yeasts_detail(self, id: str) -> YeastDetail:
+    async def get_yeast_detail(self, id: str) -> YeastDetail:
         url = self.__inventory_detail_url.format(
             category=InventoryCategory.YEASTS, id=id
         )

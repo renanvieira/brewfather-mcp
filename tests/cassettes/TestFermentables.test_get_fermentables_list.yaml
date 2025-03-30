@@ -7,7 +7,7 @@ interactions:
       accept-encoding:
       - gzip, deflate
       authorization:
-      - <auth>
+      - Basic dXNlcjpwYXNzd29yZA==
       connection:
       - keep-alive
       host:
@@ -40,12 +40,8 @@ interactions:
       - '1174'
       Content-Type:
       - application/json; charset=utf-8
-      Date:
-      - Sun, 30 Mar 2025 10:36:17 GMT
-      Etag:
-      - W/"496-bw7/UJeob/yO74jzhoQRwCmwLUk"
       Function-Execution-Id:
-      - xwl1pko5rj1l
+      - oi8jscramznl
       Server:
       - Google Frontend
       Strict-Transport-Security:
@@ -56,16 +52,8 @@ interactions:
       - MISS
       X-Cache-Hits:
       - '0'
-      X-Cloud-Trace-Context:
-      - 016b4ce273023cd7b23d20821b27de80
-      X-Country-Code:
-      - NL
       X-Powered-By:
       - Express
-      X-Served-By:
-      - cache-ams2100113-AMS
-      X-Timer:
-      - S1743330977.027130,VS0,VE307
       alt-svc:
       - h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
     status:
