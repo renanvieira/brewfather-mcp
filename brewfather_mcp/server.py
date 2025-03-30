@@ -99,7 +99,7 @@ async def read_hops() -> str:
         data = await brewfather_client.get_hops_list()
 
         formatted_response = []
-        for item in data:
+        for item in data.root:
             formatted = f"""
             Identifier: {item.id}
             Alpha Acids (A.A): {item.alpha}
@@ -167,10 +167,10 @@ async def read_yeasts() -> str:
     logger.info("received request")
 
     try:
-        data = brewfather_client.get_yeasts_list()
+        data = await brewfather_client.get_yeasts_list()
 
         formatted_response = []
-        for item in data:
+        for item in data.root:
             formatted = f"""
             Identifier: {item.id}
             Attenuation (%): {item.attenuation}
@@ -332,4 +332,3 @@ async def inventory_summary() -> str:
         return response
     except Exception:
         return dict(error=traceback.format_exc())
-
