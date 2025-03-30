@@ -47,12 +47,12 @@ class FermentableList(RootModel):
 class Timestamp(BaseModel):
     """Represents a timestamp with seconds and nanoseconds."""
 
-    _seconds: int
-    _nanoseconds: int
+    seconds: int = Field(alias="_seconds")
+    nanoseconds: int = Field(alias="_nanoseconds")
 
     def to_datetime(self) -> datetime:
         """Convert the timestamp to a Python datetime object."""
-        return datetime.fromtimestamp(self._seconds + (self._nanoseconds / 1e9))
+        return datetime.fromtimestamp(self.seconds + (self.nanoseconds / 1e9))
 
 
 class FermentableDetail(Fermentable):
@@ -61,39 +61,39 @@ class FermentableDetail(Fermentable):
     """
 
     protein: float | None = None
-    diastaticPower: float | None = None
-    notFermentable: bool
+    diastatic_power: float | None = Field(alias="diastaticPower", default=None)
+    not_fermentable: bool = Field(alias="notFermentable")
     substitutes: str = ""
     potential: float
-    _timestamp_ms: int
+    timestamp_ms: int = Field(alias="_timestamp_ms")
     percentage: float = 0
-    grainCategory: str | None = None
-    _created: Timestamp
-    userNotes: str | None = None
-    maxInBatch: float | None = None
+    grain_category: str | None = Field(alias="grainCategory", default=None)
+    created: Timestamp = Field(alias="_created")
+    user_notes: str | None = Field(alias="userNotes", default=None)
+    max_in_batch: float | None = Field(alias="maxInBatch", default=None)
     fgdb: float | None = None
-    _version: str
+    version: str = Field(alias="_version")
     acid: float | None = None
     cgdb: float | None = None
-    bestBeforeDate: str | None = None
+    best_before_date: str | None = Field(alias="bestBeforeDate", default=None)
     hidden: bool = False
     amount: float
     origin: str | None = None
-    costPerAmount: float | None = None
-    manufacturingDate: str | None = None
-    lotNumber: str | None = None
+    cost_per_amount: float | None = Field(alias="costPerAmount", default=None)
+    manufacturing_date: str | None = Field(alias="manufacturingDate", default=None)
+    lot_number: str | None = Field(alias="lotNumber", default=None)
     notes: str | None = None
-    ibuPerAmount: float | None = None
+    ibu_per_amount: float | None = Field(alias="ibuPerAmount", default=None)
     friability: float | None = None
-    _rev: str
+    rev: str = Field(alias="_rev")
     excluded: bool = False
-    _timestamp: Timestamp
+    timestamp: Timestamp = Field(alias="_timestamp")
     color: float = 0
-    potentialPercentage: float = 0
+    potential_percentage: float = Field(alias="potentialPercentage", default=0)
     moisture: float | None = None
     fan: float | None = None
-    coarseFineDiff: float | None = None
-    usedIn: str = ""
+    coarse_fine_diff: float | None = Field(alias="coarseFineDiff", default=None)
+    used_in: str = Field(alias="usedIn", default="")
 
     model_config = {
         "populate_by_name": True,
@@ -137,24 +137,28 @@ class HopDetail(Hop):
     year: int | None = None
     usage: str | None = None
     origin: str | None = None
-    _rev: str
+    rev: str = Field(alias="_rev")
     oil: float | None = None
-    _timestamp: Timestamp
-    _version: str
+    timestamp: Timestamp = Field(alias="_timestamp")
+    version: str = Field(alias="_version")
     beta: float | None = None
     amount: float | None = None
     temp: float | None = None
     substitutes: str = ""
-    bestBeforeDate: int | None = None  # Unix timestamp in milliseconds
-    usedIn: str = ""
+    best_before_date: int | None = Field(
+        alias="bestBeforeDate", default=None
+    )  # Unix timestamp in milliseconds
+    used_in: str = Field(alias="usedIn", default="")
     myrcene: float | None = None
-    _timestamp_ms: int
+    timestamp_ms: int = Field(alias="_timestamp_ms")
     cohumulone: float | None = None
     humulene: float | None = None
-    _created: Timestamp
-    manufacturingDate: int | None = None  # Unix timestamp in milliseconds
+    created: Timestamp = Field(alias="_created")
+    manufacturing_date: int | None = Field(
+        alias="manufacturingDate", default=None
+    )  # Unix timestamp in milliseconds
     time: int | None = None
-    userNotes: str = ""
+    user_notes: str = Field(alias="userNotes", default="")
     ibu: float = 0
     hsi: float | None = None  # Hop Storage Index
 
@@ -198,30 +202,31 @@ class YeastDetail(Yeast):
     """Extended yeast model with all additional properties."""
 
     laboratory: str
-    minAttenuation: int | None = None
-    maxAbv: int | None = None
+    min_attenuation: int | None = Field(alias="minAttenuation", default=None)
+    max_abv: int | None = Field(alias="maxAbv", default=None)
     hidden: bool = False
-    minTemp: int | None = None
-    maxTemp: int | None = None
-    productId: str | None = None
-    ageRate: int | None = None
+    min_temp: int | None = Field(alias="minTemp", default=None)
+    max_temp: int | None = Field(alias="maxTemp", default=None)
+    product_id: str | None = Field(alias="productId", default=None)
+    age_rate: int | None = Field(alias="ageRate", default=None)
     description: str | None = None
-    maxAttenuation: int | None = None
-    cellsPerPkg: int | None = None
+    max_attenuation: int | None = Field(alias="maxAttenuation", default=None)
+    cells_per_pkg: int | None = Field(alias="cellsPerPkg", default=None)
     form: str | None = None
     flocculation: str | None = None
     unit: str | None = None
-    bestBeforeDate: int | None = None
+    best_before_date: int | None = Field(alias="bestBeforeDate", default=None)
     amount: float | None = None
-    fermentsAll: bool = False
-    manufacturingDate: int | None = None
-    _timestamp: Timestamp
-    _timestamp_ms: int
-    userNotes: str = ""
-    _rev: str
-    _created: Timestamp
-    _version: str
+    ferments_all: bool = Field(alias="fermentsAll", default=False)
+    manufacturing_date: int | None = Field(alias="manufacturingDate", default=None)
+    timestamp: Timestamp = Field(alias="_timestamp")
+    timestamp_ms: int = Field(alias="_timestamp_ms")
+    user_notes: str = Field(alias="userNotes", default="")
+    rev: str = Field(alias="_rev")
+    created: Timestamp = Field(alias="_created")
+    ersion: str = Field(alias="_version")
 
     model_config = {
         "populate_by_name": True,
     }
+

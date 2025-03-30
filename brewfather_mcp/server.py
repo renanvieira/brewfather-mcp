@@ -34,7 +34,7 @@ async def read_fermentables() -> str:
             Type: {item.type}
             Supplier: {item.supplier}
             Quantity: {item.inventory} kg
-            Identifier: {item._id}
+            Identifier: {item.id}
             """
 
             formatted_response.append(formatted)
@@ -58,26 +58,26 @@ async def read_fermentable_detail(identifier: str) -> str:
             Supplier: {item.supplier}
             Inventory: {item.inventory}
             Origin: {item.origin}
-            Grain Category: {item.grainCategory}
+            Grain Category: {item.grain_category}
             Potential: {item.potential}
-            Potential Percentage: {item.potentialPercentage}
+            Potential Percentage: {item.potential_percentage}
             Color: {item.color}
             Moisture: {item.moisture}
             Protein: {item.protein}
-            Diastatic Power: {item.diastaticPower}
+            Diastatic Power: {item.diastatic_power}
             Friability: {item.friability}
-            Not Fermentable: {item.notFermentable}
-            Max In Batch: {item.maxInBatch}
-            Coarse Fine Diff: {item.coarseFineDiff}
+            Not Fermentable: {item.not_fermentable}
+            Max In Batch: {item.max_in_batch}
+            Coarse Fine Diff: {item.coarse_fine_diff}
             Percent Extract Fine-Ground Dry Basis (FGDB): {item.fgdb}
             Hidden: {item.hidden}
             Notes: {item.notes}
-            User Notes: {item.userNotes}
-            Used In: {item.usedIn}
+            User Notes: {item.user_notes}
+            Used In: {item.used_in}
             Substitutes: {item.substitutes}
-            Cost Per Amount: {item.costPerAmount}
-            Best Before Date: {item.bestBeforeDate}
-            Manufacturing Date: {item.manufacturingDate}
+            Cost Per Amount: {item.cost_per_amount}
+            Best Before Date: {item.best_before_date}
+            Manufacturing Date: {item.manufacturing_date}
             Free Amino Nitrogen (FAN): {item.fan}
             Percent Coarse-Ground Dry Basic (CGDB): {item.cgdb}
             Acid: {item.acid}
@@ -101,7 +101,7 @@ async def read_hops() -> str:
         formatted_response = []
         for item in data:
             formatted = f"""
-            Identifier: {item._id}
+            Identifier: {item.id}
             Alpha Acids (A.A): {item.alpha}
             Quantity: {item.inventory} grams
             Name: {item.name}
@@ -146,13 +146,13 @@ async def read_hops_detail(identifier: str) -> str:
         Temp: {item.temp}
         Amount: {item.amount}
         Substitutes: {item.substitutes}
-        Used In: {item.usedIn}
+        Used In: {item.used_in}
         Notes: {item.notes}
-        User Notes: {item.userNotes}
+        User Notes: {item.user_notes}
         Hidden: {item.hidden}
-        Best Before Date: {item.bestBeforeDate}
-        Manufacturing Date: {item.manufacturingDate}
-        Version: {item._version}
+        Best Before Date: {item.best_before_date}
+        Manufacturing Date: {item.manufacturing_date}
+        Version: {item.version}
         ID: {item.id}
         """
         return formatted
@@ -172,7 +172,7 @@ async def read_yeasts() -> str:
         formatted_response = []
         for item in data:
             formatted = f"""
-            Identifier: {item._id}
+            Identifier: {item.id}
             Attenuation (%): {item.attenuation}
             Quantity: {item.inventory} packets
             Name: {item.name}
@@ -199,30 +199,30 @@ async def read_yeasts_detail(identifier: str) -> str:
         Type: {item.type}
         Form: {item.form}
         Laboratory: {item.laboratory}
-        Product ID: {item.productId}
+        Product ID: {item.product_id}
         Inventory: {item.inventory}
         Amount: {item.amount}
         Unit: {item.unit}
         Attenuation: {item.attenuation}
-        Min Attenuation: {item.minAttenuation}
-        Max Attenuation: {item.maxAttenuation}
+        Min Attenuation: {item.min_attenuation}
+        Max Attenuation: {item.max_attenuation}
         Flocculation: {item.flocculation}
-        Min Temp: {item.minTemp}
-        Max Temp: {item.maxTemp}
-        Max ABV: {item.maxAbv}
-        Cells Per Package: {item.cellsPerPkg}
-        Age Rate: {item.ageRate}
-        Ferments All: {item.fermentsAll}
+        Min Temp: {item.min_temp}
+        Max Temp: {item.max_temp}
+        Max ABV: {item.max_abv}
+        Cells Per Package: {item.cells_per_pkg}
+        Age Rate: {item.age_rate}
+        Ferments All: {item.ferments_all}
         Description: {item.description}
-        User Notes: {item.userNotes}
+        User Notes: {item.user_notes}
         Hidden: {item.hidden}
-        Best Before Date: {item.bestBeforeDate}
-        Manufacturing Date: {item.manufacturingDate}
-        Timestamp: {item._timestamp._seconds}
-        Created: {item._created._seconds}
-        Version: {item._version}
-        ID: {item._id}
-        Rev: {item._rev}
+        Best Before Date: {item.best_before_date}
+        Manufacturing Date: {item.manufacturing_date}
+        Timestamp: {item.timestamp.seconds}
+        Created: {item.created.seconds}
+        Version: {item.version}
+        ID: {item.id}
+        Rev: {item.rev}
         """
         return formatted
 
@@ -243,8 +243,8 @@ async def get_fermentables_summary() -> list[dict]:
                 "Name": f_data.name,
                 "Type": f_data.type,
                 "Yield": fermentable_data.friability,
-                "Lot #": fermentable_data.lotNumber,
-                "Best Before Date": fermentable_data.bestBeforeDate,
+                "Lot #": fermentable_data.lot_number,
+                "Best Before Date": fermentable_data.best_before_date,
                 "Inventory Amount": f"{fermentable_data.inventory} kg",
             }
         )
@@ -262,10 +262,10 @@ async def get_hops_summary() -> dict:
         hops.append(
             {
                 "Name": h_data.name,
-                "Year": hop_data.Year,
+                "Year": hop_data.year,
                 "Alpha Acid": h_data.alpha,
-                "Lot #": hop_data.lotNumber,
-                "Best Before Date": hop_data.bestBeforeDate,
+                "Lot #": hop_data.lot_number,
+                "Best Before Date": hop_data.best_before_date,
                 "Inventory Amount": f"{hop_data.inventory} grams",
             }
         )
@@ -283,10 +283,10 @@ async def get_yeast_summary() -> dict:
         yeasts.append(
             {
                 "Name": y_data.name,
-                "Form": yeast_data.Form,
+                "Form": yeast_data.form,
                 "Attenuation": f"{y_data.attenuation}%",
-                "Lot #": yeast_data.lotNumber,
-                "Best Before Date": yeast_data.bestBeforeDate,
+                "Lot #": yeast_data.lot_number,
+                "Best Before Date": yeast_data.best_before_date,
                 "Inventory Amount": f"{yeast_data.inventory} pkg",
             }
         )
@@ -332,3 +332,4 @@ async def inventory_summary() -> str:
         return response
     except Exception:
         return dict(error=traceback.format_exc())
+
