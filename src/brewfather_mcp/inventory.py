@@ -1,6 +1,5 @@
-from mcp.server.fastmcp import Context, FastMCP
-
 from brewfather_mcp.api import BrewfatherInventoryClient
+from brewfather_mcp.types import HopDetail
 from brewfather_mcp.utils import AnyDictList, get_in_batches
 
 
@@ -10,7 +9,9 @@ async def get_fermentables_summary(
     fermentables_data = await brewfather_client.get_fermentables_list()
 
     detail_results = await get_in_batches(
-        3, fermentables_data.root, brewfather_client.get_fermentable_detail
+        3,
+        brewfather_client.get_fermentable_detail,
+        fermentables_data,
     )
 
     fermentables: AnyDictList = []
@@ -36,7 +37,7 @@ async def get_fermentables_summary(
 async def get_hops_summary(brewfather_client: BrewfatherInventoryClient) -> AnyDictList:
     hops_data = await brewfather_client.get_hops_list()
     detail_results = await get_in_batches(
-        3, hops_data.root, brewfather_client.get_hop_detail
+        3, brewfather_client.get_hop_detail, hops_data
     )
 
     hops: AnyDictList = []
@@ -60,7 +61,7 @@ async def get_yeast_summary(
 ) -> AnyDictList:
     yeasts_data = await brewfather_client.get_yeasts_list()
     detail_results = await get_in_batches(
-        3, yeasts_data.root, brewfather_client.get_yeast_detail
+        3, brewfather_client.get_yeast_detail, yeasts_data
     )
 
     yeasts: AnyDictList = []

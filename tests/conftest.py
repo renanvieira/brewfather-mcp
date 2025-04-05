@@ -1,8 +1,6 @@
 import typing
 from dotenv import load_dotenv
 import pytest
-import httpx
-from pathlib import Path
 
 _ = load_dotenv()
 

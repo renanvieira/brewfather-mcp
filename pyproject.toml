@@ -1,7 +1,7 @@
 [project]
 name = "brewfather_mcp"
-version = "0.0.1"
-description = "Add your description here"
+version = "0.0.2"
+description = "Experimental MCP server that connections to Brewfather API"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -19,3 +19,18 @@ dev = [
     "pytest-vcr>=1.0.2",
     "vcrpy>=7.0.0",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "src", "tests"
+]
+[tool.ruff.per-file-ignores]
+"tests/*" = ["ANN", "F722"]  
+
+[tool.basedpyright]
+ignore = ["tests"]
+
+[tool.coverage.run]
+omit = ["tests/*"]
+
+

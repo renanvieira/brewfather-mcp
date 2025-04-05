@@ -1,10 +1,10 @@
-from enum import auto
 import urllib.parse
-from enum import StrEnum
-from pydantic import BaseModel, Field, RootModel, field_validator
 from datetime import datetime
+from enum import StrEnum, auto
 
+from pydantic import BaseModel, Field, RootModel, field_validator
 from pydantic.config import ConfigDict
+
 import brewfather_mcp.utils as utils
 
 
@@ -15,12 +15,15 @@ class InventoryCategory(StrEnum):
     YEASTS = auto()
 
 
-class Fermentable(BaseModel):
+class InventoryItem(BaseModel):
+    id: str = Field(alias="_id")
+
+
+class Fermentable(InventoryItem):
     """
     Represents a fermentable ingredient like malt or adjunct.
     """
 
-    id: str = Field(alias="_id")
     attenuation: float | None = None
     inventory: float
     name: str
@@ -32,8 +35,8 @@ class Fermentable(BaseModel):
     }
 
 
-class FermentableList(RootModel):
-    root: list[Fermentable]
+class FermentableList(RootModel[list[Fermentable]]):
+    pass
 
 
 class Timestamp(BaseModel):
@@ -97,12 +100,11 @@ class FermentableDetail(Fermentable):
         return utils.convert_timestamp_to_iso8601(value)
 
 
-class Hop(BaseModel):
+class Hop(InventoryItem):
     """
     Base model for hop information with essential properties.
     """
 
-    id: str = Field(alias="_id")
     alpha: float
     inventory: float
     name: str
@@ -114,12 +116,12 @@ class Hop(BaseModel):
     }
 
 
-class HopList(RootModel):
+class HopList(RootModel[list[Hop]]):
     """
     A collection of hops.
     """
 
-    root: list[Hop]
+    pass
 
 
 class HopDetail(Hop):
@@ -170,10 +172,9 @@ class HopDetail(Hop):
         return utils.convert_timestamp_to_iso8601(value)
 
 
-class Yeast(BaseModel):
+class Yeast(InventoryItem):
     """Basic yeast model with essential properties."""
 
-    id: str = Field(alias="_id")
     attenuation: int
     inventory: float  # Using float to handle both integer and decimal values
     name: str
@@ -195,10 +196,10 @@ class Yeast(BaseModel):
     }
 
 
-class YeastList(RootModel):
+class YeastList(RootModel[list[Yeast]]):
     """A collection of yeasts."""
 
-    root: list[Yeast]
+    pass
 
 
 class YeastDetail(Yeast):

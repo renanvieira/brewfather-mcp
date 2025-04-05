@@ -1,12 +1,7 @@
-import os
-import typing
-import httpx
-import pytest
-import vcr
-from pathlib import Path
 from unittest.mock import patch
 
-from vcr.config import RecordMode
+import httpx
+import pytest
 
 from brewfather_mcp.api import BrewfatherInventoryClient
 from brewfather_mcp.types import (
@@ -14,6 +9,7 @@ from brewfather_mcp.types import (
     FermentableList,
     HopDetail,
     HopList,
+    YeastDetail,
     YeastList,
 )
 
@@ -102,7 +98,7 @@ class TestYeasts:
             assert len(result.root) > 0
             assert result.root[0].name is not None
             assert result.root[0].id is not None
-            assert result.root[0].alpha > 0.0
+            assert result.root[0].attenuation > 0.0
 
     @pytest.mark.asyncio
     @pytest.mark.vcr

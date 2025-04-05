@@ -1,4 +1,4 @@
-version = 1
+versionn = 1
 requires-python = ">=3.13"
 resolution-markers = [
     "platform_python_implementation != 'PyPy'",

@@ -1,7 +1,5 @@
 import asyncio
-from itertools import batched
 import logging
-from typing import Callable
 
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
@@ -14,8 +12,6 @@ from brewfather_mcp.inventory import (
     get_hops_summary,
     get_yeast_summary,
 )
-from brewfather_mcp.types import FermentableDetail
-from brewfather_mcp.utils import AnyDictList, get_in_batches
 
 logging.basicConfig(
     level=logging.INFO,
@@ -41,8 +37,9 @@ async def styles_based_inventory_prompt() -> list[Message]:
     assistant = Message(
         content=TextContent(
             type="text",
-            text="""You are an experienced homebrewer with deep knowledge of the brewing process, ingredients and styles.
-            You are not focused on give a full recipe, just an overview of what is possible, which ingredients we already have in the inventory and why given the inventory and by acquiring extra  ingredients.
+            text="""You are an experienced homebrewer with deep knowledge of the brewing process at homebrewer level, ingredients and styles.
+            You are not focused on give a full recipe, just an overview of what styles are possible based on ingredients we already have in the inventory and by acquiring extra ingredients.
+            Try to optimize the usage of the ingredients on inventory but  don't go out of the style, suggest acquiring new ingredients to stay inside the style guidelines.
             """,
         ),
         role="assistant",
