@@ -1,4 +1,10 @@
+import asyncio
+import typing
 from datetime import datetime
+from itertools import batched
+
+AnyDict = dict[str, str | int | float | None]
+AnyDictList = list[AnyDict]
 
 
 def convert_timestamp_to_iso8601(value: int | None):
@@ -7,7 +13,7 @@ def convert_timestamp_to_iso8601(value: int | None):
         return None
 
     # If the value is an integer (Unix timestamp), convert it
-    if isinstance(value, int):
+    if value:
         # Check if it's in milliseconds (13 digits) or seconds (10 digits)
         if len(str(value)) > 10:  # milliseconds
             timestamp_seconds = value / 1000
@@ -18,3 +24,17 @@ def convert_timestamp_to_iso8601(value: int | None):
         return dt.isoformat()
 
     return value
+
+
+async def get_in_batches(
+    n: int,
+    main_iterable: list[typing.Any],
+    callable: typing.Callable[[str], typing.Any],  # type: ignore
+) -> list[typing.Any]:  # noqa
+    detail_results = []
+    detail_tasks = [callable(data.id) for data in main_iterable]
+    batches = batched(detail_tasks, n)
+    for batch in batches:
+        detail_results.extend(await asyncio.gather(*batch))
+
+    return detail_results

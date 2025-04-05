@@ -14,7 +14,6 @@ from brewfather_mcp.types import (
     FermentableList,
     HopDetail,
     HopList,
-    YeastDetail,
     YeastList,
 )
 
@@ -103,7 +102,7 @@ class TestYeasts:
             assert len(result.root) > 0
             assert result.root[0].name is not None
             assert result.root[0].id is not None
-            assert result.root[0].attenuation > 0.0
+            assert result.root[0].alpha > 0.0
 
     @pytest.mark.asyncio
     @pytest.mark.vcr

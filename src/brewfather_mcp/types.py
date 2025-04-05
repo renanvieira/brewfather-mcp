@@ -54,7 +54,7 @@ class FermentableDetail(Fermentable):
 
     protein: float | None = None
     diastatic_power: float | None = Field(alias="diastaticPower", default=None)
-    not_fermentable: bool = Field(alias="notFermentable")
+    not_fermentable: bool | None = Field(alias="notFermentable", default=None)
     substitutes: str = ""
     potential: float
     timestamp_ms: int = Field(alias="_timestamp_ms")
@@ -158,6 +158,7 @@ class HopDetail(Hop):
     user_notes: str = Field(alias="userNotes", default="")
     ibu: float = 0
     hsi: float | None = None  # Hop Storage Index
+    lot_number: str | None = Field(alias="lotNumber", default=None)
 
     model_config = {
         "populate_by_name": True,
@@ -207,8 +208,8 @@ class YeastDetail(Yeast):
     min_attenuation: int | None = Field(alias="minAttenuation", default=None)
     max_abv: int | None = Field(alias="maxAbv", default=None)
     hidden: bool = False
-    min_temp: int | None = Field(alias="minTemp", default=None)
-    max_temp: int | None = Field(alias="maxTemp", default=None)
+    min_temp: float | None = Field(alias="minTemp", default=None)
+    max_temp: float | None = Field(alias="maxTemp", default=None)
     product_id: str | None = Field(alias="productId", default=None)
     age_rate: int | None = Field(alias="ageRate", default=None)
     description: str | None = None
@@ -217,7 +218,7 @@ class YeastDetail(Yeast):
     form: str | None = None
     flocculation: str | None = None
     unit: str | None = None
-    best_before_date: int | None = Field(alias="bestBeforeDate", default=None)
+    best_before_date: str | None = Field(alias="bestBeforeDate", default=None)
     amount: float | None = None
     ferments_all: bool = Field(alias="fermentsAll", default=False)
     manufacturing_date: str | None = Field(alias="manufacturingDate", default=None)
@@ -227,10 +228,11 @@ class YeastDetail(Yeast):
     rev: str = Field(alias="_rev")
     created: Timestamp = Field(alias="_created")
     version: str = Field(alias="_version")
+    lot_number: str | None = Field(alias="lotNumber", default=None)
 
     @field_validator("manufacturing_date", "best_before_date", mode="before")
     @classmethod
-    def convert_timestamp_to_isodate(cls, value):
+    def convert_timestamp_to_isodate(cls, value: int | None):
         return utils.convert_timestamp_to_iso8601(value)
 
     model_config = {
@@ -273,7 +275,7 @@ class ListQueryParams:
             qs += f"order_by={urllib.parse.quote_plus(self.order_by)}"
 
         if self.order_by_direction:
-           qs += f"order_by_direction={self.order_by_direction}"
+            qs += f"order_by_direction={self.order_by_direction}"
 
         if qs:
             return qs
