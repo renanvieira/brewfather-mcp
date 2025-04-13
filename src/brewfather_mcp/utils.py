@@ -11,13 +11,14 @@ if typing.TYPE_CHECKING:
         InventoryItem,
     )
 
+AnyType = str | int | float
 AnyDict = dict[str, str | int | float | None]
 AnyDictList = list[AnyDict]
 
 
-def convert_timestamp_to_iso8601(value: int | None):
+def convert_timestamp_to_iso8601(value: int | None) -> str | None:
     """Convert Unix timestamp to ISO 8601 formatted string."""
-    if value is None:
+    if not value:
         return None
 
     # If the value is an integer (Unix timestamp), convert it
@@ -30,8 +31,8 @@ def convert_timestamp_to_iso8601(value: int | None):
 
         dt = datetime.fromtimestamp(timestamp_seconds)
         return dt.isoformat()
-
-    return value
+    else:
+        return None
 
 
 async def get_in_batches[TReturn: "InventoryItem", TIterable: "InventoryItem"](
@@ -47,3 +48,10 @@ async def get_in_batches[TReturn: "InventoryItem", TIterable: "InventoryItem"](
         detail_results.extend(await asyncio.gather(*batch))
 
     return detail_results
+
+
+def empty_if_null(s: AnyType | None) -> str:
+    if not s:
+        return ""
+    else:
+        return s

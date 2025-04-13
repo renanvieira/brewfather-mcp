@@ -1,6 +1,6 @@
 from brewfather_mcp.api import BrewfatherInventoryClient
 from brewfather_mcp.types import HopDetail
-from brewfather_mcp.utils import AnyDictList, get_in_batches
+from brewfather_mcp.utils import AnyDictList, empty_if_null, get_in_batches
 
 
 async def get_fermentables_summary(
@@ -24,9 +24,9 @@ async def get_fermentables_summary(
             {
                 "Name": f_data.name,
                 "Type": f_data.type,
-                "Yield": fermentable_data.friability,
-                "Lot #": fermentable_data.lot_number,
-                "Best Before Date": fermentable_data.best_before_date,
+                "Yield": empty_if_null(fermentable_data.friability),
+                "Lot #": empty_if_null(fermentable_data.lot_number),
+                "Best Before Date": empty_if_null(fermentable_data.best_before_date),
                 "Inventory Amount": f"{fermentable_data.inventory} kg",
             }
         )
@@ -45,10 +45,10 @@ async def get_hops_summary(brewfather_client: BrewfatherInventoryClient) -> AnyD
         hops.append(
             {
                 "Name": h_data.name,
-                "Year": hop_data.year,
+                "Year": empty_if_null(hop_data.year),
                 "Alpha Acid": h_data.alpha,
-                "Lot #": hop_data.lot_number,
-                "Best Before Date": hop_data.best_before_date,
+                "Lot #": empty_if_null(hop_data.lot_number),
+                "Best Before Date": empty_if_null(hop_data.best_before_date),
                 "Inventory Amount": f"{hop_data.inventory} grams",
             }
         )
@@ -71,8 +71,8 @@ async def get_yeast_summary(
                 "Name": y_data.name,
                 "Form": yeast_data.form,
                 "Attenuation": f"{y_data.attenuation}%",
-                "Lot #": yeast_data.lot_number,
-                "Best Before Date": yeast_data.best_before_date,
+                "Lot #": empty_if_null(yeast_data.lot_number),
+                "Best Before Date": empty_if_null(yeast_data.best_before_date),
                 "Inventory Amount": f"{yeast_data.inventory} pkg",
             }
         )
