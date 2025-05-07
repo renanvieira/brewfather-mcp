@@ -23,7 +23,8 @@ from brewfather_mcp.types import (
 
 
 @pytest.fixture
-def mock_brewfather_client():
+def mock_brewfather_client(mocker):
+    mocker.patch("os.getenv", "credential")
     client = AsyncMock(spec=BrewfatherInventoryClient)
 
     fermentable = MagicMock(
