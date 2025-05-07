@@ -1,12 +1,7 @@
-import os
-import typing
-import httpx
-import pytest
-import vcr
-from pathlib import Path
 from unittest.mock import patch
 
-from vcr.config import RecordMode
+import httpx
+import pytest
 
 from brewfather_mcp.api import BrewfatherInventoryClient
 from brewfather_mcp.types import (
