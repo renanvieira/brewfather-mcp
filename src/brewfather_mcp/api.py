@@ -9,6 +9,9 @@ from brewfather_mcp.types import (
     HopList,
     InventoryCategory,
     ListQueryParams,
+    Miscellaneous,
+    MiscellaneousDetail,
+    MiscellaneousList,
     YeastDetail,
     YeastList,
 )
@@ -93,3 +96,21 @@ class BrewfatherInventoryClient:
         )
         json_response = await self._make_request(url)
         return YeastDetail.model_validate_json(json_response)
+
+    async def get_miscellaneous_list(
+        self, query_params: ListQueryParams | None = None
+    ) -> MiscellaneousList:
+        url = self.__inventory_summary_url.format(category=InventoryCategory.MISCELLANEOUS)
+
+        if query_params:
+            url += f"?{query_params.as_query_param_str()}"
+
+        json_response = await self._make_request(url)
+        return MiscellaneousList.model_validate_json(json_response)
+
+    async def get_miscellaneous_detail(self, id: str) -> MiscellaneousDetail:
+        url = self.__inventory_detail_url.format(
+            category=InventoryCategory.MISCELLANEOUS, id=id
+        )
+        json_response = await self._make_request(url)
+        return MiscellaneousDetail.model_validate_json(json_response)

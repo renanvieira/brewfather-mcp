@@ -241,6 +241,62 @@ class YeastDetail(Yeast):
     }
 
 
+class Miscellaneous(InventoryItem):
+    """
+    Base model for miscellaneous brewing items (finings, nutrients, water treatments, spices, etc.).
+    """
+
+    inventory: float
+    name: str
+    type: str
+    use: str
+
+    model_config = {
+        "populate_by_name": True,
+    }
+
+
+class MiscellaneousList(RootModel[list[Miscellaneous]]):
+    """A collection of miscellaneous items."""
+
+    pass
+
+
+class MiscellaneousDetail(Miscellaneous):
+    """Extended miscellaneous model with all additional properties."""
+
+    amount: float | None = None
+    amount_is_weight: bool | None = Field(alias="amountIsWeight", default=None)
+    time: int | None = None
+    notes: str = ""
+    hidden: bool = False
+    use_for: str | None = Field(alias="useFor", default=None)
+    substitutes: str = ""
+    user_notes: str = Field(alias="userNotes", default="")
+    best_before_date: str | None = Field(alias="bestBeforeDate", default=None)
+    manufacturing_date: str | None = Field(alias="manufacturingDate", default=None)
+    timestamp: Timestamp = Field(alias="_timestamp")
+    timestamp_ms: int = Field(alias="_timestamp_ms")
+    rev: str = Field(alias="_rev")
+    created: Timestamp = Field(alias="_created")
+    version: str = Field(alias="_version")
+    lot_number: str | None = Field(alias="lotNumber", default=None)
+    cost_per_amount: float | None = Field(alias="costPerAmount", default=None)
+    supplier: str | None = None
+    concentration: float | None = None
+    units: str | None = None
+    used_in: str = Field(alias="usedIn", default="")
+
+    @field_validator("manufacturing_date", "best_before_date", mode="before")
+    @classmethod
+    def convert_timestamp_to_isodate(cls, value: int | None):
+        return utils.convert_timestamp_to_iso8601(value)
+
+    model_config = {
+        "populate_by_name": True,
+    }
+
+
 class OrderByDirection(StrEnum):
     ASCENDING = "asc"
     DESCENDING = "desc"

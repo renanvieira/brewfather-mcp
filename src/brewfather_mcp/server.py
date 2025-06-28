@@ -65,6 +65,7 @@ async def inventory_categories() -> str:
     content = """
     Fermentables (Grains, Adjuncts, etc..)
     Hops
+    Miscellaneous (Finings, Nutrients, Water Treatments, etc..)
     Yeasts
     """
 
@@ -269,6 +270,70 @@ User Notes: {item.user_notes}
 Hidden: {item.hidden}
 Best Before Date: {item.best_before_date}
 Manufacturing Date: {item.manufacturing_date}
+Timestamp: {item.timestamp.seconds}
+Created: {item.created.seconds}
+Version: {item.version}
+ID: {item.id}
+Rev: {item.rev}
+"""
+        return formatted
+
+    except Exception:
+        logger.exception("Error happened")
+        raise
+
+
+@mcp.resource(uri="inventory://miscellaneous")
+async def read_miscellaneous() -> str:
+    logger.info("received request")
+
+    try:
+        data = await brewfather_client.get_miscellaneous_list()
+
+        formatted_response: list[str] = []
+        for item in data.root:
+            formatted = f"""Identifier: {item.id}
+Name: {item.name}
+Type: {item.type}
+Use: {item.use}
+Quantity: {item.inventory}
+"""
+
+            formatted_response.append(formatted)
+
+        return "---\n".join(formatted_response)
+    except Exception:
+        logger.exception("Error happened")
+        raise
+
+
+@mcp.resource(uri="inventory://miscellaneous/{identifier}")
+async def read_miscellaneous_detail(identifier: str) -> str:
+    logger.info("received request")
+
+    try:
+        item = await brewfather_client.get_miscellaneous_detail(identifier)
+
+        formatted = f"""Name: {item.name}
+Type: {item.type}
+Use: {item.use}
+Inventory: {item.inventory}
+Amount: {item.amount}
+Amount Is Weight: {item.amount_is_weight}
+Time: {item.time}
+Use For: {item.use_for}
+Supplier: {item.supplier}
+Concentration: {item.concentration}
+Units: {item.units}
+Substitutes: {item.substitutes}
+Used In: {item.used_in}
+Notes: {item.notes}
+User Notes: {item.user_notes}
+Hidden: {item.hidden}
+Best Before Date: {item.best_before_date}
+Manufacturing Date: {item.manufacturing_date}
+Cost Per Amount: {item.cost_per_amount}
+Lot Number: {item.lot_number}
 Timestamp: {item.timestamp.seconds}
 Created: {item.created.seconds}
 Version: {item.version}
