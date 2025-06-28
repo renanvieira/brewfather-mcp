@@ -10,6 +10,7 @@ from brewfather_mcp.api import BrewfatherInventoryClient
 from brewfather_mcp.inventory import (
     get_fermentables_summary,
     get_hops_summary,
+    get_miscellaneous_summary,
     get_yeast_summary,
 )
 
@@ -65,6 +66,7 @@ async def inventory_categories() -> str:
     content = """
     Fermentables (Grains, Adjuncts, etc..)
     Hops
+    Miscellaneous (Finings, Nutrients, Water Treatments, etc..)
     Yeasts
     """
 
@@ -146,7 +148,11 @@ ID: {item.id}
         raise
 
 
-@mcp.resource(uri="inventory://hops")
+@mcp.resource(
+    uri="inventory://hops",
+    name="Hops",
+    description="List all the hops inventory.",
+)
 async def read_hops() -> str:
     logger.info("received request")
 
@@ -171,7 +177,11 @@ Use: {item.use}
         raise
 
 
-@mcp.resource(uri="inventory://hops/{identifier}")
+@mcp.resource(
+    uri="inventory://hops/{identifier}",
+    name="Hop detail",
+    description="Detailed information of the hop item.",
+)
 async def read_hops_detail(identifier: str) -> str:
     logger.info("received request")
 
@@ -215,7 +225,11 @@ ID: {item.id}
         raise
 
 
-@mcp.resource(uri="inventory://yeasts")
+@mcp.resource(
+    uri="inventory://yeasts",
+    name="Yeasts",
+    description="List all the yeasts inventory.",
+)
 async def read_yeasts() -> str:
     logger.info("received request")
 
@@ -239,7 +253,11 @@ Type: {item.type}
         raise
 
 
-@mcp.resource(uri="inventory://yeasts/{identifier}")
+@mcp.resource(
+    uri="inventory://yeasts/{identifier}",
+    name="Yeast detail",
+    description="Detailed information of the yeast item.",
+)
 async def read_yeasts_detail(identifier: str) -> str:
     logger.info("received request")
 
@@ -282,11 +300,83 @@ Rev: {item.rev}
         raise
 
 
+@mcp.resource(
+    uri="inventory://miscellaneous",
+    name="Miscellaneous",
+    description="List all the miscellaneous items (finings, nutrients, water treatments, spices, etc.) inventory.",
+)
+async def read_miscellaneous() -> str:
+    logger.info("received request")
+
+    try:
+        data = await brewfather_client.get_miscellaneous_list()
+
+        formatted_response: list[str] = []
+        for item in data.root:
+            formatted = f"""Identifier: {item.id}
+Name: {item.name}
+Type: {item.type}
+Use: {item.use}
+Quantity: {item.inventory}
+"""
+
+            formatted_response.append(formatted)
+
+        return "---\n".join(formatted_response)
+    except Exception:
+        logger.exception("Error happened")
+        raise
+
+
+@mcp.resource(
+    uri="inventory://miscellaneous/{identifier}",
+    name="Miscellaneous detail",
+    description="Detailed information of the miscellaneous item.",
+)
+async def read_miscellaneous_detail(identifier: str) -> str:
+    logger.info("received request")
+
+    try:
+        item = await brewfather_client.get_miscellaneous_detail(identifier)
+
+        formatted = f"""Name: {item.name}
+Type: {item.type}
+Use: {item.use}
+Inventory: {item.inventory}
+Amount: {item.amount}
+Amount Is Weight: {item.amount_is_weight}
+Time: {item.time}
+Use For: {item.use_for}
+Supplier: {item.supplier}
+Concentration: {item.concentration}
+Units: {item.units}
+Substitutes: {item.substitutes}
+Used In: {item.used_in}
+Notes: {item.notes}
+User Notes: {item.user_notes}
+Hidden: {item.hidden}
+Best Before Date: {item.best_before_date}
+Manufacturing Date: {item.manufacturing_date}
+Cost Per Amount: {item.cost_per_amount}
+Lot Number: {item.lot_number}
+Timestamp: {item.timestamp.seconds}
+Created: {item.created.seconds}
+Version: {item.version}
+ID: {item.id}
+Rev: {item.rev}
+"""
+        return formatted
+
+    except Exception:
+        logger.exception("Error happened")
+        raise
+
+
 @mcp.tool()
 @mcp.resource(
     uri="inventory://overview",
     name="Brewfather Inventory Overview",
-    description="Overview of all the inventory(malts, grains, hops and yeasts). Contains the same data as the PDF/Print export from the app.",
+    description="Overview of all the inventory(malts, grains, hops, miscellaneous and yeasts). Contains the same data as the PDF/Print export from the app.",
 )
 async def inventory_summary() -> str:
     try:
@@ -294,11 +384,14 @@ async def inventory_summary() -> str:
         fermentables_coro = get_fermentables_summary(brewfather_client)
         hops_coro = get_hops_summary(brewfather_client)
         yeasts_coro = get_yeast_summary(brewfather_client)
+        miscellaneous_coro = get_miscellaneous_summary(brewfather_client)
 
-        result = await asyncio.gather(fermentables_coro, hops_coro, yeasts_coro)
+        result = await asyncio.gather(
+            fermentables_coro, hops_coro, yeasts_coro, miscellaneous_coro
+        )
         await ctx.info("API data gathered")
 
-        fermentables, hops, yeasts = result
+        fermentables, hops, yeasts, miscellaneous = result
 
         response = "Fermentables:\n\n"
         for fermentable in fermentables:
@@ -318,6 +411,14 @@ async def inventory_summary() -> str:
         response += "Yeasts:\n\n"
         for yeast in yeasts:
             for k, v in yeast.items():
+                response += f"{k}: {v}\n"
+            response += "\n"
+
+        response += "\n---\n"
+
+        response += "Miscellaneous:\n\n"
+        for misc in miscellaneous:
+            for k, v in misc.items():
                 response += f"{k}: {v}\n"
             response += "\n"
 

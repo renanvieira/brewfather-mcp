@@ -11,6 +11,8 @@ from brewfather_mcp.server import (
     read_hops_detail,
     read_yeasts,
     read_yeasts_detail,
+    read_miscellaneous,
+    read_miscellaneous_detail,
     inventory_summary,
     styles_based_inventory_prompt,
 )
@@ -18,6 +20,7 @@ from brewfather_mcp.api import BrewfatherInventoryClient
 from brewfather_mcp.types import (
     FermentableList,
     HopList,
+    MiscellaneousList,
     YeastList,
 )
 
@@ -137,6 +140,39 @@ def mock_brewfather_client(mocker):
     client.get_yeasts_list.return_value = yeasts_list
     client.get_yeast_detail.return_value = yeast
 
+    miscellaneous = MagicMock(
+        name="Test Fining",
+        type="Fining",
+        use="Primary",
+        inventory=10,
+        amount=2,
+        amount_is_weight=True,
+        time=None,
+        use_for="Clarification",
+        supplier="Test Supplier",
+        concentration=None,
+        units="g",
+        substitutes="",
+        used_in="",
+        notes="Test fining agent",
+        user_notes="",
+        hidden=False,
+        best_before_date=None,
+        manufacturing_date=None,
+        cost_per_amount=None,
+        lot_number=None,
+        timestamp=MagicMock(seconds=1613000000),
+        created=MagicMock(seconds=1612000000),
+        version="2.10.5",
+        id="test-misc-id",
+        rev="xyz789",
+    )
+
+    miscellaneous_list = MagicMock(spec=MiscellaneousList)
+    miscellaneous_list.root = [miscellaneous]
+    client.get_miscellaneous_list.return_value = miscellaneous_list
+    client.get_miscellaneous_detail.return_value = miscellaneous
+
     return client
 
 
@@ -154,6 +190,7 @@ class TestBrewfatherMCP:
         result = await inventory_categories()
         assert "Fermentables" in result
         assert "Hops" in result
+        assert "Miscellaneous" in result
         assert "Yeasts" in result
 
     @pytest.mark.asyncio
@@ -205,6 +242,22 @@ class TestBrewfatherMCP:
             assert "Medium" in result
 
     @pytest.mark.asyncio
+    async def test_read_miscellaneous(self, mock_brewfather_client):
+        with patch("brewfather_mcp.server.brewfather_client", mock_brewfather_client):
+            result = await read_miscellaneous()
+            assert "Test Fining" in result
+            assert "Fining" in result
+            assert "Primary" in result
+
+    @pytest.mark.asyncio
+    async def test_read_miscellaneous_detail(self, mock_brewfather_client):
+        with patch("brewfather_mcp.server.brewfather_client", mock_brewfather_client):
+            result = await read_miscellaneous_detail("test-misc-id")
+            assert "Test Fining" in result
+            assert "Clarification" in result
+            assert "Test Supplier" in result
+
+    @pytest.mark.asyncio
     async def test_inventory_summary(self, mock_brewfather_client, mock_mcp_context):
         with (
             patch("brewfather_mcp.server.brewfather_client", mock_brewfather_client),
@@ -223,14 +276,20 @@ class TestBrewfatherMCP:
                 "brewfather_mcp.inventory.get_yeast_summary",
                 return_value=[{"Name": "Test Yeast", "Inventory": "2 pkg"}],
             ),
+            patch(
+                "brewfather_mcp.inventory.get_miscellaneous_summary",
+                return_value=[{"Name": "Test Fining", "Inventory": "10"}],
+            ),
         ):
             result = await inventory_summary()
             assert "Fermentables:" in result
             assert "Hops:" in result
             assert "Yeasts:" in result
+            assert "Miscellaneous:" in result
             assert "Test Malt" in result
             assert "Test Hop" in result
             assert "Test Yeast" in result
+            assert "Test Fining" in result
             mock_mcp_context.report_progress.assert_called_with(100, 100)
 
     @pytest.mark.asyncio

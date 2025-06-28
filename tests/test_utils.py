@@ -1,5 +1,4 @@
 import asyncio
-from typing import Any, Coroutine
 from unittest.mock import AsyncMock
 
 import pytest

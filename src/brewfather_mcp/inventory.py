@@ -1,5 +1,4 @@
 from brewfather_mcp.api import BrewfatherInventoryClient
-from brewfather_mcp.types import HopDetail
 from brewfather_mcp.utils import AnyDictList, empty_if_null, get_in_batches
 
 
@@ -78,3 +77,27 @@ async def get_yeast_summary(
         )
 
     return yeasts
+
+
+async def get_miscellaneous_summary(
+    brewfather_client: BrewfatherInventoryClient,
+) -> AnyDictList:
+    miscellaneous_data = await brewfather_client.get_miscellaneous_list()
+    detail_results = await get_in_batches(
+        3, brewfather_client.get_miscellaneous_detail, miscellaneous_data
+    )
+
+    miscellaneous: AnyDictList = []
+    for m_data, misc_data in zip(miscellaneous_data.root, detail_results, strict=True):
+        miscellaneous.append(
+            {
+                "Name": m_data.name,
+                "Type": m_data.type,
+                "Use": m_data.use,
+                "Lot #": empty_if_null(misc_data.lot_number),
+                "Best Before Date": empty_if_null(misc_data.best_before_date),
+                "Inventory Amount": f"{misc_data.inventory}",
+            }
+        )
+
+    return miscellaneous
