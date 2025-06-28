@@ -1,5 +1,4 @@
 from brewfather_mcp.api import BrewfatherInventoryClient
-from brewfather_mcp.types import HopDetail
 from brewfather_mcp.utils import AnyDictList, empty_if_null, get_in_batches
 
 

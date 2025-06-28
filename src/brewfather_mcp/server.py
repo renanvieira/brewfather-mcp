@@ -386,7 +386,9 @@ async def inventory_summary() -> str:
         yeasts_coro = get_yeast_summary(brewfather_client)
         miscellaneous_coro = get_miscellaneous_summary(brewfather_client)
 
-        result = await asyncio.gather(fermentables_coro, hops_coro, yeasts_coro, miscellaneous_coro)
+        result = await asyncio.gather(
+            fermentables_coro, hops_coro, yeasts_coro, miscellaneous_coro
+        )
         await ctx.info("API data gathered")
 
         fermentables, hops, yeasts, miscellaneous = result

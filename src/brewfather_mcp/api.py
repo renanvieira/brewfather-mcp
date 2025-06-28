@@ -9,7 +9,6 @@ from brewfather_mcp.types import (
     HopList,
     InventoryCategory,
     ListQueryParams,
-    Miscellaneous,
     MiscellaneousDetail,
     MiscellaneousList,
     YeastDetail,
@@ -100,7 +99,9 @@ class BrewfatherInventoryClient:
     async def get_miscellaneous_list(
         self, query_params: ListQueryParams | None = None
     ) -> MiscellaneousList:
-        url = self.__inventory_summary_url.format(category=InventoryCategory.MISCELLANEOUS)
+        url = self.__inventory_summary_url.format(
+            category=InventoryCategory.MISCELLANEOUS
+        )
 
         if query_params:
             url += f"?{query_params.as_query_param_str()}"

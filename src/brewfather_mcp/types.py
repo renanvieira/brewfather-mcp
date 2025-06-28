@@ -3,7 +3,6 @@ from datetime import datetime
 from enum import StrEnum, auto
 
 from pydantic import BaseModel, Field, RootModel, field_validator
-from pydantic.config import ConfigDict
 
 import brewfather_mcp.utils as utils
 
