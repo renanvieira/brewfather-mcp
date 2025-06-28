@@ -276,14 +276,20 @@ class TestBrewfatherMCP:
                 "brewfather_mcp.inventory.get_yeast_summary",
                 return_value=[{"Name": "Test Yeast", "Inventory": "2 pkg"}],
             ),
+            patch(
+                "brewfather_mcp.inventory.get_miscellaneous_summary",
+                return_value=[{"Name": "Test Fining", "Inventory": "10"}],
+            ),
         ):
             result = await inventory_summary()
             assert "Fermentables:" in result
             assert "Hops:" in result
             assert "Yeasts:" in result
+            assert "Miscellaneous:" in result
             assert "Test Malt" in result
             assert "Test Hop" in result
             assert "Test Yeast" in result
+            assert "Test Fining" in result
             mock_mcp_context.report_progress.assert_called_with(100, 100)
 
     @pytest.mark.asyncio
